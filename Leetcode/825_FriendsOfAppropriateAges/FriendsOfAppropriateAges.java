@@ -17,7 +17,7 @@ class FriendsOfAppropriateAges {
         		continue;
         	}
             for (int j = i + 1; j < agesBoxed.length; j++) {
-            	if (agesBoxed[j] > 100 || agesBoxed[j] <= boundary) {
+            	if (agesBoxed[j] > 100 || boundary > 57) {
             		continue;
             	}
             	if (agesBoxed[i] == agesBoxed[j]) {
