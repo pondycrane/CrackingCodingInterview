@@ -9,56 +9,19 @@ import java.util.SortedSet;
  */
 class DailyTemperatures {
 	public int[] dailyTemperatures(int[] temperatures) {
-		TreeSet<DailyTemperature> tempTree = new TreeSet<>((a, b) -> {
-			int comp = Integer.compare(a.getInd(), b.getInd());
-			if (comp != 0) {
-				return comp;
-			} else {
-				return Integer.compare(a.getTemperature(), b.getTemperature());
-			}
-		});
-
-		int[] ans = new int[temperatures.length];
+		int[] minTempInds = new int[101];
 		for (int i = temperatures.length - 1; i >= 0; i--) {
-			if (tempTree.isEmpty()) {
-				ans[i] = 0;
-			} else {
-				
-				DailyTemperature temperature = new DailyTemperature(i + 1, temperatures[i]);
-				System.out.println(temperature);
-
-				SortedSet<DailyTemperature> higherPart = tempTree.tailSet(temperature);
-				System.out.println(higherPart);
-				if (higherPart.isEmpty()) {
-					ans[i] = 0;
-				} else {
-					ans[i] = higherPart.first().getInd() - i;
+			int minTempInd = Math.MAX_VALUE;
+			for (int j = temperatures[i] + 1; j <= 100; j++) {
+				if (minTempInds[j] != 0) {
+					minTempInd = Math.min(minTempInds[j], i);
 				}
 			}
-			tempTree.add(new DailyTemperature(i, temperatures[i]));
+			if (minTempInd != Math.MAX_VALUE) {
+				minTempInds[temperatures[i]] = minTempInd;
+			}
 		}
-		return ans;
-	}
-
-	private static class DailyTemperature {
-		private int ind;
-		private int temperature;
-		DailyTemperature(int index, int temper) {
-			ind = index;
-			temperature = temper;
-		}
-
-		public int getInd() {
-			return ind;
-		}
-
-		public int getTemperature() {
-			return temperature;
-		}
-
-		public String toString() {
-			return "{" + ind + "," + temperature + "}";
-		}
+		return minTempsInds;
 	}
 
 	public static void main(String[] args) {
