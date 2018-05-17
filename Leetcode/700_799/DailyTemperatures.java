@@ -10,11 +10,12 @@ import java.util.SortedSet;
 class DailyTemperatures {
 	public int[] dailyTemperatures(int[] temperatures) {
 		int[] minTempInds = new int[101];
+		
 		for (int i = temperatures.length - 1; i >= 0; i--) {
 			int minTempInd = Math.MAX_VALUE;
-			for (int j = temperatures[i] + 1; j <= 100; j++) {
+			for (int j = temperatures[i]; j <= 100; j++) {
 				if (minTempInds[j] != 0) {
-					minTempInd = Math.min(minTempInds[j], i);
+					minTempInd = Math.min(minTempInd, Math.min(minTempInds[j], i));
 				}
 			}
 			if (minTempInd != Math.MAX_VALUE) {
