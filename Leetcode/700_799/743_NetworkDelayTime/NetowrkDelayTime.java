@@ -1,13 +1,15 @@
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Queue;
+import java.util.PriorityQueue;
 
+/**
+ * Use Dijkstra's algorithm.
+ * BFS + weighting.
+ */
 class NetowrkDelayTime {
 	public int networkDelayTime(int[][] times, int N, int K) {
 		Map<Integer, Map<Integer, Integer>> routes = new HashMap<>();
-		Set<Integer> touched = new HashSet<>();
-		int[] history = getRawHistory(N);
 		for (int i = 0; i < times.length; i++) {
 			Map<Integer, Integer> targets = routes.getOrDefault(times[i][0], new HashMap<Integer, Integer>());
 			if (targets.containsKey(times[i][1])) {
@@ -17,44 +19,42 @@ class NetowrkDelayTime {
 			}
 			routes.put(times[i][0], targets);
 		}
-		history[K - 1] = 0;
-		touched.add(K);
-		dfs(routes, K, 0, history, touched);
-		int maxTime = Integer.MIN_VALUE;
-		for (int i = 0; i < history.length; i++) {
-			if (history[i] == -1) {
+
+		int[] cost_so_far = getRawHistory(N);
+		boolean[] seen = new boolean[N + 1];
+		Queue<Integer> frontier = new PriorityQueue<>();
+		frontier.add(K);
+		cost_so_far[K] = 0;
+		while (!frontier.isEmpty()) {
+			int current = frontier.poll();
+			Map<Integer, Integer> targets = routes.get(current);
+			if (targets != null) {
+				for (Map.Entry entry: targets.entrySet()) {
+					int next = (int) entry.getKey();
+					int newCost = cost_so_far[current] + (int) entry.getValue();
+					if (cost_so_far[next] == -1 || cost_so_far[next] > newCost) {
+						frontier.add(next);
+						cost_so_far[next] = newCost;
+					}
+				}
+			}
+		}
+		int maxTime = 0;
+		for (int i = 1; i < cost_so_far.length; i++) {
+			if (cost_so_far[i] == -1) {
 				return -1;
 			}
-			maxTime = Math.max(maxTime, history[i]);
+			maxTime = Math.max(maxTime, cost_so_far[i]);
 		}
 		return maxTime;
 	}
 
 	private static int[] getRawHistory(int N) {
-		int[] history = new int[N];
-		for (int i = 0; i < history.length; i++) {
-			history[i] = -1;
+		int[] cost_so_far = new int[N + 1];
+		for (int i = 0; i < cost_so_far.length; i++) {
+			cost_so_far[i] = -1;
 		}
-		return history;
-	}
-
-	private static void dfs(Map<Integer, Map<Integer, Integer>> routes, int start, int curr, int[] history, Set<Integer> touched) {
-		int ind = start - 1;
-		if (history[ind] != -1 && curr > history[ind]) {
-			return;
-		}
-		history[ind] = history[ind] == -1 ? curr : Math.min(history[ind], curr);
-		Map<Integer, Integer> targets = routes.get(start);
-		if (targets == null) {
-			return;
-		}
-		for (Map.Entry<Integer, Integer> entry: targets.entrySet()) {
-			if (!touched.contains(entry.getKey())) {
-				touched.add(entry.getKey());
-				dfs(routes, entry.getKey(), curr + entry.getValue(), history, touched);
-				touched.remove(entry.getKey());
-			}
-		}
+		return cost_so_far;
 	}
 
 	public static void main(String[] args) {
