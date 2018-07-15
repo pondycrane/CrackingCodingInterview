@@ -9,16 +9,7 @@ import java.util.PriorityQueue;
  */
 class NetowrkDelayTime {
 	public int networkDelayTime(int[][] times, int N, int K) {
-		Map<Integer, Map<Integer, Integer>> routes = new HashMap<>();
-		for (int i = 0; i < times.length; i++) {
-			Map<Integer, Integer> targets = routes.getOrDefault(times[i][0], new HashMap<Integer, Integer>());
-			if (targets.containsKey(times[i][1])) {
-				targets.put(times[i][1], Math.min(targets.get(times[i][1]), times[i][2]));
-			} else {
-				targets.put(times[i][1], times[i][2]);
-			}
-			routes.put(times[i][0], targets);
-		}
+		Map<Integer, Map<Integer, Integer>> routes = getRawRoutes(times);
 
 		int[] cost_so_far = getRawHistory(N);
 		boolean[] seen = new boolean[N + 1];
@@ -32,6 +23,7 @@ class NetowrkDelayTime {
 				for (Map.Entry entry: targets.entrySet()) {
 					int next = (int) entry.getKey();
 					int newCost = cost_so_far[current] + (int) entry.getValue();
+					// Get the best cost
 					if (cost_so_far[next] == -1 || cost_so_far[next] > newCost) {
 						frontier.add(next);
 						cost_so_far[next] = newCost;
@@ -39,6 +31,7 @@ class NetowrkDelayTime {
 				}
 			}
 		}
+		// Time required = biggest cost of all
 		int maxTime = 0;
 		for (int i = 1; i < cost_so_far.length; i++) {
 			if (cost_so_far[i] == -1) {
@@ -47,6 +40,20 @@ class NetowrkDelayTime {
 			maxTime = Math.max(maxTime, cost_so_far[i]);
 		}
 		return maxTime;
+	}
+
+	private static Map<Integer, Map<Integer, Integer>> getRawRoutes(int[][] times) {
+		Map<Integer, Map<Integer, Integer>> routes = new HashMap<>();
+		for (int i = 0; i < times.length; i++) {
+			Map<Integer, Integer> targets = routes.getOrDefault(times[i][0], new HashMap<Integer, Integer>());
+			if (targets.containsKey(times[i][1])) {
+				targets.put(times[i][1], Math.min(targets.get(times[i][1]), times[i][2]));
+			} else {
+				targets.put(times[i][1], times[i][2]);
+			}
+			routes.put(times[i][0], targets);
+		}
+		return routes;
 	}
 
 	private static int[] getRawHistory(int N) {
