@@ -49,6 +49,11 @@ class ValidTicTacToeState {
     	if (board[0].charAt(2) != ' ' &&  board[0].charAt(2) == board[1].charAt(1)  && board[1].charAt(1) == board[2].charAt(0)) {
     		winCount = winCount + 1;
     	}
+    	for (int i = 0; i < 3; i++) {
+	    	if (board[0].charAt(i) != ' ' &&  board[0].charAt(i) == board[1].charAt(i)  && board[1].charAt(i) == board[2].charAt(i)) {
+	    		winCount = winCount + 1;
+	    	}
+    	}
     	if (winCount > 1) {
     		System.out.println("checkWinningState");
     		return false;

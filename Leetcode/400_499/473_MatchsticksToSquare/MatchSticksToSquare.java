@@ -23,7 +23,7 @@ class MatchSticksToSquare {
     }
 
     private static boolean dfs(Map<Integer, Integer> count, int level, int length, int curr) {
-    	System.out.println(count + ", " + level + ", " + length + ", " + curr);
+    	// System.out.println(count + ", " + level + ", " + length + ", " + curr);
     	if (level > 4) {
     		return false;
     	}

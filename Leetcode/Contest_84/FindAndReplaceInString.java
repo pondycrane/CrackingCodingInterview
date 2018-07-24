@@ -16,15 +16,6 @@ class FindAndReplaceInString {
         		last = last + tree.get(i)[0].length() + (i - last);
         	}
         }
-        /*
-        for (int i = 0; i < indexes.length; i++) {
-        	if (checkValid(S, indexes[i], sources[i])) {
-	        	sb.append(S.substring(last, indexes[i]));
-	        	sb.append(targets[i]);
-	        	last = last + sources[i].length() + (indexes[i] - last);
-        	}
-        }
-        */
         sb.append(S.substring(last, S.length()));
         return sb.toString();
     }

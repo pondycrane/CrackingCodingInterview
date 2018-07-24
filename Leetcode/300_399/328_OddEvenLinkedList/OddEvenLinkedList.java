@@ -1,5 +1,8 @@
 class OddEvenLinkedList {
     public ListNode oddEvenList(ListNode head) {
+    	if (head == null) {
+    		return null;
+    	}
         ListNode odd = head;
         ListNode oddP = null;
         ListNode even = new ListNode(0);
@@ -21,6 +24,16 @@ class OddEvenLinkedList {
         return head;
     }
 
+	private static ListNode generateLN(int[] data) {
+		ListNode result = new ListNode(0);
+		ListNode now = result;
+		for (int i = 0; i < data.length; i++) {
+			now.next = new ListNode(data[i]);
+			now = now.next;
+		}
+		return result.next;
+	}
+
 	private static class ListNode {
 		int val;
 		ListNode next;
@@ -36,16 +49,6 @@ class OddEvenLinkedList {
 			}
 			return sb.toString();
 		}
-	}
-
-	private static ListNode generateLN(int[] data) {
-		ListNode result = new ListNode(0);
-		ListNode now = result;
-		for (int i = 0; i < data.length; i++) {
-			now.next = new ListNode(data[i]);
-			now = now.next;
-		}
-		return result.next;
 	}
 
 	public static void main(String[] args) {
